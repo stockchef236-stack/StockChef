@@ -17,3 +17,24 @@ App launches successfully with splash screen
 Users can register, login, and logout
 Navigation between screens works correctly
 
+
+Sprint 2 – 2026-03-12
+
+User Story:
+
+As a user, I want to view and search my inventory items so that I can easily find what I need.
+Work Done:
+Created Ingredient model and repository interface
+Integrated Supabase CRUD operations for ingredients
+Implemented DTOs and mappers for data transformation
+Built HomeViewModel with StateFlow and search functionality
+Designed UI with LazyColumn, search bar, and item cards
+Connected ViewModel with navigation and UI
+
+Outcome:
+
+Ingredient list is fetched and displayed
+Users can search and filter items
+UI updates reactively with data changes
+
+
