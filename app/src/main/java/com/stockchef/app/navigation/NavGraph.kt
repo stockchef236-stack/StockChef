@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.stockchef.app.presentation.auth.AuthScreen
 import com.stockchef.app.presentation.home.HomeScreen
+import com.stockchef.app.presentation.home.HomeViewModel
+import com.stockchef.app.presentation.home.HomeViewModelFactory
 import com.stockchef.app.presentation.splash.SplashScreen
 import com.stockchef.app.presentation.splash.SplashViewModel
 
@@ -52,8 +54,15 @@ fun StockChefNavGraph() {
 
         composable<Home> {
 
-            HomeScreen()
+            val viewModel: HomeViewModel = viewModel(
+                factory = HomeViewModelFactory()
+            )
 
+            HomeScreen(
+                viewModel = viewModel,
+                onAddClick = { },
+                onItemClick = { }
+            )
         }
     }
 }
