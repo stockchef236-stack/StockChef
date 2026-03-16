@@ -5,6 +5,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.stockchef.app.presentation.addedit.AddEditViewModel
+import com.stockchef.app.presentation.addedit.AddEditViewModelFactory
+import com.stockchef.app.presentation.addedit.AddUpdateStockScreen
 import com.stockchef.app.presentation.auth.AuthScreen
 import com.stockchef.app.presentation.home.HomeScreen
 import com.stockchef.app.presentation.home.HomeViewModel
@@ -60,8 +64,28 @@ fun StockChefNavGraph() {
 
             HomeScreen(
                 viewModel = viewModel,
-                onAddClick = { },
-                onItemClick = { }
+                onAddClick = {
+                    navController.navigate(AddEdit())
+                },
+                onItemClick = { id ->
+                    navController.navigate(AddEdit(id))
+                }
+            )
+        }
+
+        composable<AddEdit> { backStackEntry ->
+
+            val route = backStackEntry.toRoute<AddEdit>()
+
+            val viewModel: AddEditViewModel = viewModel(
+                factory = AddEditViewModelFactory(route.id)
+            )
+
+            AddUpdateStockScreen(
+                viewModel = viewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         }
     }

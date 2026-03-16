@@ -38,3 +38,26 @@ Users can search and filter items
 UI updates reactively with data changes
 
 
+Sprint 3 – 2026-03-16
+
+User Story:
+
+As a user, I want to add, edit, and delete items (with images) so that I can manage my inventory effectively.
+Work Done:
+Built Add/Edit screen with ViewModel and UI state
+Implemented create, update, and delete operations
+Added camera integration for capturing item images
+Configured FileProvider and permissions
+Integrated Supabase Storage for image uploads
+Added delete confirmation dialog and improved UI
+
+Outcome:
+
+Users can add new ingredients with images
+Users can edit and delete existing items
+Images are captured, uploaded, and displayed correctly
+
+
+
+
+
