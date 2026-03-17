@@ -1,21 +1,12 @@
 package com.stockchef.app.presentation.addedit
 
-import android.Manifest
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
-import coil.compose.rememberAsyncImagePainter
-import java.io.File
-import androidx.core.content.FileProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,42 +14,8 @@ fun AddUpdateStockContent(
     state: AddEditUiState,
     onNameChange: (String) -> Unit,
     onQuantityChange: (String) -> Unit,
-    onSave: () -> Unit,
-    onImageCaptured: (String) -> Unit
+    onSave: () -> Unit
 ) {
-
-    val context = LocalContext.current
-
-    var tempImageUri by remember { mutableStateOf<Uri?>(null) }
-
-    fun createImageUri(): Uri {
-        val file = File(
-            context.cacheDir,
-            "temp_image_${System.currentTimeMillis()}.jpg"
-        )
-        return FileProvider.getUriForFile(
-            context,
-            context.packageName + ".provider",
-            file
-        )
-    }
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success && tempImageUri != null) {
-            onImageCaptured(tempImageUri.toString())
-        }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            tempImageUri = createImageUri()
-            cameraLauncher.launch(tempImageUri!!)
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -98,29 +55,10 @@ fun AddUpdateStockContent(
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-
-                    state.imageUri?.let {
-                        Image(
-                            painter = rememberAsyncImagePainter(it),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(180.dp)
-                        )
-                    }
-
-                    Button(
-                        onClick = {
-                            permissionLauncher.launch(Manifest.permission.CAMERA)
-                        }
-                    ) {
-                        Text("Capture Image")
-                    }
-                }
+                Text(
+                    text = "Image preview will be here (Commit 11)",
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }

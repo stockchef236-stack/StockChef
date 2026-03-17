@@ -9,6 +9,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+data class AddEditUiState(
+    val name: String = "",
+    val quantity: String = "",
+    val imageUrl: String? = null,
+    val isLoading: Boolean = false
+)
+
 class AddEditViewModel(
     private val repository: IngredientRepository,
     private val ingredientId: String? = null
@@ -62,9 +69,5 @@ class AddEditViewModel(
 
             onSuccess()
         }
-    }
-
-    fun onImageCaptured(uri: String) {
-        _uiState.value = _uiState.value.copy(imageUri = uri)
     }
 }
