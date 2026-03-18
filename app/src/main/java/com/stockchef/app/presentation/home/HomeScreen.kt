@@ -13,6 +13,10 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadIngredients()
+    }
+
     HomeContent(
         state = state,
         ingredients = viewModel.getFilteredIngredients(),

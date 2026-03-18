@@ -1,5 +1,6 @@
 package com.stockchef.app.domain.repository
 
+import android.content.Context
 import com.stockchef.app.domain.model.Ingredient
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,6 @@ interface IngredientRepository {
     suspend fun updateIngredient(ingredient: Ingredient)
 
     suspend fun deleteIngredient(id: String)
+
+    suspend fun uploadImage(context: Context, uri: String): String
 }

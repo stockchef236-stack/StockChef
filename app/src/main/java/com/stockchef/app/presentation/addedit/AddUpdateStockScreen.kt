@@ -1,8 +1,8 @@
 package com.stockchef.app.presentation.addedit
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun AddUpdateStockScreen(
@@ -11,16 +11,18 @@ fun AddUpdateStockScreen(
 ) {
 
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     AddUpdateStockContent(
         state = state,
         onNameChange = viewModel::onNameChange,
         onQuantityChange = viewModel::onQuantityChange,
         onSave = {
-            viewModel.saveIngredient {
+            viewModel.saveIngredient(context) {
                 onBack()
             }
-        }
+        },
+        onImageCaptured = viewModel::onImageCaptured
     )
 }
 
@@ -31,13 +33,15 @@ fun AddUpdateStockPreview() {
     val sampleState = AddEditUiState(
         name = "Tomato",
         quantity = "10",
-        imageUrl = null
+        imageUrl = null,
+        imageUri = null
     )
 
     AddUpdateStockContent(
         state = sampleState,
         onNameChange = {},
         onQuantityChange = {},
-        onSave = {}
+        onSave = {},
+        onImageCaptured = {}
     )
 }

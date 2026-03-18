@@ -1,5 +1,7 @@
 package com.stockchef.app.data.repository
 
+import android.content.Context
+import android.net.Uri
 import com.stockchef.app.data.remote.SupabaseManager
 import com.stockchef.app.data.remote.dto.SupabaseIngredientDto
 import com.stockchef.app.data.remote.mapper.toDto
@@ -7,11 +9,14 @@ import com.stockchef.app.data.remote.mapper.toIngredient
 import com.stockchef.app.domain.model.Ingredient
 import com.stockchef.app.domain.repository.IngredientRepository
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json.Default.decodeFromString
+import java.io.File
 
-class IngredientRepositoryImpl : IngredientRepository {
+class IngredientRepositoryImpl() : IngredientRepository {
 
     override suspend fun getIngredients(): Flow<List<Ingredient>> = flow {
 
@@ -43,9 +48,15 @@ class IngredientRepositoryImpl : IngredientRepository {
 
     override suspend fun addIngredient(ingredient: Ingredient) {
 
+        val dto = InsertIngredientDto(
+            name = ingredient.name,
+            quantity = ingredient.quantity,
+            image_url = ingredient.imageUrl
+        )
+
         SupabaseManager.client
             .from("ingredients")
-            .insert(ingredient.toDto())
+            .insert(dto)
     }
 
     override suspend fun updateIngredient(ingredient: Ingredient) {
@@ -69,4 +80,33 @@ class IngredientRepositoryImpl : IngredientRepository {
                 }
             }
     }
+
+    override suspend fun uploadImage(
+        context: Context,
+        uri: String
+    ): String {
+
+        val inputStream = context.contentResolver
+            .openInputStream(Uri.parse(uri))
+            ?: throw Exception("Cannot open image")
+
+        val bytes = inputStream.readBytes()
+
+        val fileName = "ingredient_${System.currentTimeMillis()}.jpg"
+
+        SupabaseManager.client.storage
+            .from("ingredients")
+            .upload(fileName, bytes)
+
+        return SupabaseManager.client.storage
+            .from("ingredients")
+            .publicUrl(fileName)
+    }
 }
+
+@Serializable
+data class InsertIngredientDto(
+    val name: String,
+    val quantity: Int,
+    val image_url: String? = null
+)

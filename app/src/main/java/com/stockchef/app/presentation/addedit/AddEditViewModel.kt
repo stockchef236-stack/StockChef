@@ -1,5 +1,6 @@
 package com.stockchef.app.presentation.addedit
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stockchef.app.domain.model.Ingredient
@@ -8,13 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
-data class AddEditUiState(
-    val name: String = "",
-    val quantity: String = "",
-    val imageUrl: String? = null,
-    val isLoading: Boolean = false
-)
 
 class AddEditViewModel(
     private val repository: IngredientRepository,
@@ -49,16 +43,23 @@ class AddEditViewModel(
         _uiState.value = _uiState.value.copy(quantity = value)
     }
 
-    fun saveIngredient(onSuccess: () -> Unit) {
+    fun saveIngredient(
+        context: Context,
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
 
-            val qty = _uiState.value.quantity.toIntOrNull() ?: 0
+            var imageUrl = _uiState.value.imageUrl
+
+            _uiState.value.imageUri?.let { uri ->
+                imageUrl = repository.uploadImage(context, uri)
+            }
 
             val ingredient = Ingredient(
                 id = ingredientId ?: "",
                 name = _uiState.value.name,
-                quantity = qty,
-                imageUrl = _uiState.value.imageUrl
+                quantity = _uiState.value.quantity.toIntOrNull() ?: 0,
+                imageUrl = imageUrl
             )
 
             if (ingredientId == null) {
@@ -70,4 +71,9 @@ class AddEditViewModel(
             onSuccess()
         }
     }
+
+    fun onImageCaptured(uri: String) {
+        _uiState.value = _uiState.value.copy(imageUri = uri)
+    }
+
 }
