@@ -76,4 +76,13 @@ class AddEditViewModel(
         _uiState.value = _uiState.value.copy(imageUri = uri)
     }
 
+    fun deleteIngredient(onSuccess: () -> Unit) {
+        if (ingredientId == null) return
+
+        viewModelScope.launch {
+            repository.deleteIngredient(ingredientId)
+            onSuccess()
+        }
+    }
+
 }

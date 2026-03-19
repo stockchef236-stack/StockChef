@@ -24,12 +24,14 @@ fun AddUpdateStockContent(
     onNameChange: (String) -> Unit,
     onQuantityChange: (String) -> Unit,
     onSave: () -> Unit,
-    onImageCaptured: (String) -> Unit
+    onImageCaptured: (String) -> Unit,
+    onDelete: () -> Unit
 ) {
 
     val context = LocalContext.current
 
     var tempImageUri by remember { mutableStateOf<Uri?>(null) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     fun createImageUri(): Uri {
         val file = File(
@@ -124,12 +126,57 @@ fun AddUpdateStockContent(
                     Button(
                         onClick = {
                             permissionLauncher.launch(Manifest.permission.CAMERA)
-                        }
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Capture Image")
+                    }
+
+                    if (state.imageUrl != null || state.imageUri != null || state.name.isNotBlank()) {
+                        Button(
+                            onClick = { showDeleteDialog = true },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Delete Ingredient")
+                        }
                     }
                 }
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDelete()
+                    }
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text("Cancel")
+                }
+            },
+            title = { Text("Delete Ingredient") },
+            text = {
+                Column {
+                    Text("Are you sure you want to delete?")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Name: ${state.name}")
+                    Text("Qty: ${state.quantity}")
+                }
+            }
+        )
     }
 }

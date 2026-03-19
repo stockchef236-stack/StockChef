@@ -22,7 +22,12 @@ fun AddUpdateStockScreen(
                 onBack()
             }
         },
-        onImageCaptured = viewModel::onImageCaptured
+        onImageCaptured = viewModel::onImageCaptured,
+        onDelete = {
+            viewModel.deleteIngredient {
+                onBack()
+            }
+        }
     )
 }
 
@@ -42,6 +47,7 @@ fun AddUpdateStockPreview() {
         onNameChange = {},
         onQuantityChange = {},
         onSave = {},
-        onImageCaptured = {}
+        onImageCaptured = {},
+        onDelete = {}
     )
 }
