@@ -17,4 +17,6 @@ interface IngredientRepository {
     suspend fun deleteIngredient(id: String)
 
     suspend fun uploadImage(context: Context, uri: String): String
+
+    suspend fun getIngredientsOnce(): List<Ingredient>
 }

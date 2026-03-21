@@ -102,6 +102,18 @@ class IngredientRepositoryImpl() : IngredientRepository {
             .from("ingredients")
             .publicUrl(fileName)
     }
+
+    override suspend fun getIngredientsOnce(): List<Ingredient> {
+
+        val response = SupabaseManager.client
+            .from("ingredients")
+            .select()
+
+        val dtoList =
+            decodeFromString<List<SupabaseIngredientDto>>(response.data)
+
+        return dtoList.map { it.toIngredient() }
+    }
 }
 
 @Serializable

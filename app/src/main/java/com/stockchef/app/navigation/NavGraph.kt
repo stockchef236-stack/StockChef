@@ -1,6 +1,7 @@
 package com.stockchef.app.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -58,8 +59,10 @@ fun StockChefNavGraph() {
 
         composable<Home> {
 
+            val context = LocalContext.current
+
             val viewModel: HomeViewModel = viewModel(
-                factory = HomeViewModelFactory()
+                factory = HomeViewModelFactory(context)
             )
 
             HomeScreen(
