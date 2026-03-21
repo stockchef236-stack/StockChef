@@ -58,6 +58,28 @@ Users can edit and delete existing items
 Images are captured, uploaded, and displayed correctly
 
 
+Sprint 4 – 2026-03-21
+
+User Story:
+
+As a user, I want my inventory to work offline and update in real-time so that I always have access to my data.
+Work Done:
+Implemented Room database (Entity, DAO, Database)
+Added data mapping between local and domain models
+Built caching strategy (local + remote sync)
+Implemented network monitoring
+Added Settings screen with logout & data clearing
+Integrated notifications for low stock alerts
+
+Outcome:
+
+App works offline with cached data
+Data syncs automatically when back online
+Users receive notifications for low stock items
+Users can manage settings and logout
+
+
+
 
 
 
