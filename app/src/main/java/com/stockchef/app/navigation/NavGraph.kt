@@ -14,6 +14,7 @@ import com.stockchef.app.presentation.auth.AuthScreen
 import com.stockchef.app.presentation.home.HomeScreen
 import com.stockchef.app.presentation.home.HomeViewModel
 import com.stockchef.app.presentation.home.HomeViewModelFactory
+import com.stockchef.app.presentation.settings.SettingsScreen
 import com.stockchef.app.presentation.splash.SplashScreen
 import com.stockchef.app.presentation.splash.SplashViewModel
 
@@ -88,6 +89,17 @@ fun StockChefNavGraph() {
                 viewModel = viewModel,
                 onBack = {
                     navController.popBackStack()
+                }
+            )
+        }
+
+        composable<Settings> {
+
+            SettingsScreen(
+                onLogout = {
+                    navController.navigate(Auth) {
+                        popUpTo<Home> { inclusive = true }
+                    }
                 }
             )
         }
