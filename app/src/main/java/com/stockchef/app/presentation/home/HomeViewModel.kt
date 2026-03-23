@@ -9,6 +9,7 @@ import com.stockchef.app.data.local.toEntity
 import com.stockchef.app.domain.model.Ingredient
 import com.stockchef.app.domain.repository.IngredientRepository
 import com.stockchef.app.utils.NetworkMonitor
+import com.stockchef.app.utils.NotificationHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    context: Context,
+    private val context: Context,
     private val repository: IngredientRepository
 ) : ViewModel() {
 
@@ -54,12 +55,16 @@ class HomeViewModel(
                 val localData = dao.getAll()
 
                 if (localData.isNotEmpty()) {
+                    val mapped = localData.map { it.toDomain() }
+
                     _uiState.update {
                         it.copy(
-                            ingredients = localData.map { it.toDomain() },
+                            ingredients = mapped,
                             isLoading = false
                         )
                     }
+
+                    checkLowStock(mapped)
                 }
 
                 try {
@@ -74,6 +79,8 @@ class HomeViewModel(
                             isLoading = false
                         )
                     }
+
+                    checkLowStock(remoteData)
 
                 } catch (e: Exception) {
                     if (localData.isEmpty()) {
@@ -93,6 +100,17 @@ class HomeViewModel(
                         error = e.message
                     )
                 }
+            }
+        }
+    }
+
+    private fun checkLowStock(list: List<Ingredient>) {
+        list.forEach { ingredient ->
+            if (ingredient.isLowStock) {
+                NotificationHelper.showLowStockNotification(
+                    context,
+                    ingredient.name
+                )
             }
         }
     }
