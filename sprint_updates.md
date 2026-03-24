@@ -79,6 +79,27 @@ Users receive notifications for low stock items
 Users can manage settings and logout
 
 
+Sprint 5 – 2026-03-24
+
+User Story:
+
+As a user, I want a polished and visually appealing app so that I have a smooth and modern experience.
+Work Done:
+Redesigned app theme (colors, typography, gradients)
+Enhanced Splash, Auth, Home, Add/Edit, and Settings UI
+Improved animations and transitions
+Refined ingredient card design with status indicators
+Optimized navigation and UI interactions
+Prevented duplicate low-stock notifications
+
+Outcome:
+
+App has a modern and consistent UI/UX
+Smooth animations and transitions improve usability
+Inventory status is clearly visualized
+Overall app experience is polished and production-ready
+
+
 
 
 
