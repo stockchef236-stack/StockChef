@@ -1,8 +1,10 @@
 package com.stockchef.app.presentation.addedit
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.stockchef.app.ui.theme.StockChefTheme
 
 @Composable
 fun AddUpdateStockScreen(
@@ -42,12 +44,14 @@ fun AddUpdateStockPreview() {
         imageUri = null
     )
 
-    AddUpdateStockContent(
-        state = sampleState,
-        onNameChange = {},
-        onQuantityChange = {},
-        onSave = {},
-        onImageCaptured = {},
-        onDelete = {}
-    )
+    StockChefTheme {
+        AddUpdateStockContent(
+            state = sampleState,
+            onNameChange = {},
+            onQuantityChange = {},
+            onSave = {},
+            onImageCaptured = {},
+            onDelete = {}
+        )
+    }
 }

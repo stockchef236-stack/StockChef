@@ -1,32 +1,17 @@
 package com.stockchef.app.presentation.auth
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -51,64 +36,83 @@ fun AuthContent(
 
     val gradient = Brush.verticalGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.tertiary,
-            MaterialTheme.colorScheme.secondary
+            MaterialTheme.colorScheme.background,
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
         )
+    )
+
+    val infinite = rememberInfiniteTransition(label = "")
+    val glow by infinite.animateFloat(
+        initialValue = 0.6f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            tween(1800, easing = LinearEasing),
+            RepeatMode.Reverse
+        ),
+        label = ""
     )
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color.Transparent
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(gradient)
-                .padding(padding)
-                .padding(20.dp),
+                .padding(padding),
             contentAlignment = Alignment.Center
         ) {
 
+            Box(
+                modifier = Modifier
+                    .size(280.dp)
+                    .clip(CircleShape)
+                    .background(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.08f * glow)
+                    )
+            )
+
             Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(32.dp),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-                shadowElevation = 5.dp,
-                tonalElevation = 8.dp
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                shape = RoundedCornerShape(28.dp),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 10.dp,
+                shadowElevation = 10.dp
             ) {
 
                 Column(
-                    modifier = Modifier
-                        .padding(28.dp),
-                    verticalArrangement = Arrangement.spacedBy(22.dp)
+                    modifier = Modifier.padding(26.dp),
+                    verticalArrangement = Arrangement.spacedBy(18.dp)
                 ) {
 
-                    Text(
-                        text = if (state.mode == AuthMode.LOGIN)
-                            "Welcome Back 👋"
-                        else
-                            "Create Account ✨",
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    AnimatedContent(targetState = state.mode, label = "") { mode ->
+                        Text(
+                            text = if (mode == AuthMode.LOGIN)
+                                "Login to continue"
+                            else
+                                "Get started",
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
 
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = onEmailChange,
-                        label = { Text("Email") },
+                        label = { Text("Email address") },
                         isError = !state.isEmailValid,
-                        modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        shape = RoundedCornerShape(18.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(14.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            cursorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
                             focusedContainerColor = MaterialTheme.colorScheme.surface,
                             unfocusedContainerColor = MaterialTheme.colorScheme.surface
                         )
@@ -120,14 +124,12 @@ fun AuthContent(
                         label = { Text("Password") },
                         visualTransformation = PasswordVisualTransformation(),
                         isError = !state.isPasswordValid,
-                        modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        shape = RoundedCornerShape(18.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(14.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            cursorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
                             focusedContainerColor = MaterialTheme.colorScheme.surface,
                             unfocusedContainerColor = MaterialTheme.colorScheme.surface
                         )
@@ -138,18 +140,17 @@ fun AuthContent(
                         enabled = state.canSubmit,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp),
-                        shape = RoundedCornerShape(20.dp),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 2.dp
+                            .height(52.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Text(
                             text = if (state.mode == AuthMode.LOGIN)
-                                "Login"
+                                "Continue"
                             else
-                                "Register",
+                                "Create Account",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -162,9 +163,9 @@ fun AuthContent(
                     ) {
                         Text(
                             text = if (state.mode == AuthMode.LOGIN)
-                                "New here? Create an account"
+                                "Create new account"
                             else
-                                "Already have an account? Login",
+                                "Already registered? Login",
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Medium
