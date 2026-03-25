@@ -1,15 +1,18 @@
 package com.stockchef.app.presentation.home
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.stockchef.app.domain.model.Ingredient
+import com.stockchef.app.ui.theme.StockChefTheme
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
     onAddClick: () -> Unit,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -22,7 +25,8 @@ fun HomeScreen(
         ingredients = viewModel.getFilteredIngredients(),
         onSearchChange = viewModel::onSearchQueryChange,
         onAddClick = onAddClick,
-        onItemClick = onItemClick
+        onItemClick = onItemClick,
+        onSettingsClick = onSettingsClick
     )
 }
 
@@ -57,11 +61,14 @@ fun HomeScreenPreview() {
         searchQuery = ""
     )
 
-    HomeContent(
-        state = sampleState,
-        ingredients = sampleIngredients,
-        onSearchChange = {},
-        onAddClick = {},
-        onItemClick = {}
-    )
+    StockChefTheme {
+        HomeContent(
+            state = sampleState,
+            ingredients = sampleIngredients,
+            onSearchChange = {},
+            onAddClick = {},
+            onItemClick = {},
+            onSettingsClick = {}
+        )
+    }
 }

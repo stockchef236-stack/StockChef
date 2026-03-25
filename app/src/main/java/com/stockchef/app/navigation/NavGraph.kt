@@ -73,6 +73,9 @@ fun StockChefNavGraph() {
                 },
                 onItemClick = { id ->
                     navController.navigate(AddEdit(id))
+                },
+                onSettingsClick = {
+                    navController.navigate(Settings)
                 }
             )
         }

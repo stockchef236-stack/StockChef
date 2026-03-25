@@ -28,6 +28,8 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
 
+    private val notifiedItems = mutableSetOf<String>()
+
     init {
         observeNetwork()
         loadIngredients()
@@ -106,11 +108,19 @@ class HomeViewModel(
 
     private fun checkLowStock(list: List<Ingredient>) {
         list.forEach { ingredient ->
-            if (ingredient.isLowStock) {
+
+            if (ingredient.isLowStock && !notifiedItems.contains(ingredient.id)) {
+
                 NotificationHelper.showLowStockNotification(
                     context,
                     ingredient.name
                 )
+
+                notifiedItems.add(ingredient.id)
+            }
+
+            if (!ingredient.isLowStock && notifiedItems.contains(ingredient.id)) {
+                notifiedItems.remove(ingredient.id)
             }
         }
     }
