@@ -191,7 +191,7 @@ fun AddUpdateStockContent(
                     }
                 }
 
-                if (state.name.isNotBlank()) {
+                if (state.imageUrl != null) {
 
                     Button(
                         onClick = { showDeleteDialog = true },
